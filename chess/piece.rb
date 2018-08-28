@@ -9,13 +9,16 @@ class Piece
     @board = board
     @pos = pos
   end
+  
+  def inspect
+    "Type of Piece #{self.class} Color #{@color} Pos #{@pos}"
+  end
 end
 
 class NullPiece < Piece
   include Singleton
   def initialize
     @color = :grey
-    @board = nil
     @pos = nil
   end
 end

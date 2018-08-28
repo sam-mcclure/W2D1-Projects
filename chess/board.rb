@@ -1,37 +1,38 @@
 require 'byebug'
 require_relative 'piece.rb'
+require_relative 'display.rb'
 
 class Board
   
-  def self.create_grid
-    grid = Array.new(8) { Array.new(8) }
-    # debugger
-    grid.each_with_index do |row, row_idx|  
+  def create_grid
+    @rows = Array.new(8) { Array.new(8) }
+    @rows.each_with_index do |row, row_idx|  
       row.each_index do |col_idx|
+        # debugger
         if row_idx <= 1
-          grid[row_idx][col_idx] = Piece.new(:black, self, [row_idx, col_idx])
+          self[[row_idx, col_idx]] = Piece.new(:black, self, [row_idx, col_idx])
         elsif row_idx >= 6
-          grid[row_idx][col_idx] = Piece.new(:white, self, [row_idx, col_idx])
+          self[[row_idx, col_idx]] = Piece.new(:white, self, [row_idx, col_idx])
         else
-          grid[row_idx][col_idx] = @sentinel
+          self[[row_idx, col_idx]] = @sentinel
         end
       end 
     end
-    grid
+    @rows
   end
   
   def initialize
     @sentinel = NullPiece.instance
-    @rows = Board.create_grid
+    @rows = create_grid
   end
   
   def move_piece(start_pos, end_pos)
     piece = self[start_pos]
-    raise ArgumentError, "No piece at start position" if self[start_pos].nil?
-    raise ArguementError, "That piece can't move there" if !!self[end_pos]
-    self[start_pos] = nil
+    raise ArgumentError, "No piece at start position" if self[start_pos] == @sentinel
+    raise ArgumentError, "One of your pieces is already at that position" if self[end_pos].color == piece.color
+    self[start_pos] = @sentinel
     self[end_pos] = piece
-    # piece.pos = end_pos
+    piece.pos = end_pos
   end
   
   def [](pos)
@@ -44,4 +45,12 @@ class Board
     @rows[x][y] = value
   end
   
+  def valid_pos?(pos)
+    x,y = pos
+    valid = (x >= 0 && x <= 7 && y >= 0 && y <= 7) 
+    raise ArgumentError, "The board doesn't contain that position" unless valid
+    valid
+  end 
+  
+
 end
