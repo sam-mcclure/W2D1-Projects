@@ -93,7 +93,6 @@ class Cursor
   end
 
   def update_pos(diff)
-    debugger
     new_pos = []
     new_pos << @cursor_pos.first + diff.first
     new_pos << @cursor_pos.last + diff.last

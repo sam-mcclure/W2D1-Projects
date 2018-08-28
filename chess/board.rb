@@ -3,6 +3,7 @@ require_relative 'piece.rb'
 require_relative 'display.rb'
 
 class Board
+  attr_reader :rows
   
   def create_grid
     @rows = Array.new(8) { Array.new(8) }
@@ -50,7 +51,15 @@ class Board
     valid = (x >= 0 && x <= 7 && y >= 0 && y <= 7) 
     raise ArgumentError, "The board doesn't contain that position" unless valid
     valid
-  end 
+  end
+  
+  def make_move
+    d = Display.new(self)
+    while true
+      d.render
+      d.cursor.get_input
+    end
+  end
   
 
 end
