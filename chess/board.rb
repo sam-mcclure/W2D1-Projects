@@ -10,11 +10,14 @@ class Board
     @rows.each_with_index do |row, row_idx|  
       row.each_index do |col_idx|
         # debugger
-        if row_idx <= 1
-          self[[row_idx, col_idx]] = Piece.new(:black, self, [row_idx, col_idx])
-        elsif row_idx >= 6
-          self[[row_idx, col_idx]] = Piece.new(:white, self, [row_idx, col_idx])
-        else
+        if row_idx == 1
+          self[[row_idx, col_idx]] = Pawn.new(:black, self, [row_idx, col_idx])
+        elsif row_idx == 6
+          self[[row_idx, col_idx]] = Pawn.new(:white, self, [row_idx, col_idx])
+            
+        
+        else 
+          # row_idx > 1 && row_idx < 6
           self[[row_idx, col_idx]] = @sentinel
         end
       end 
@@ -36,6 +39,10 @@ class Board
     piece.pos = end_pos
   end
   
+  def add_piece(piece, pos)
+    self[pos] = piece 
+  end
+  
   def [](pos)
     x, y = pos
     @rows[x][y]
@@ -49,7 +56,7 @@ class Board
   def valid_pos?(pos)
     x,y = pos
     valid = (x >= 0 && x <= 7 && y >= 0 && y <= 7) 
-    raise ArgumentError, "The board doesn't contain that position" unless valid
+    # raise ArgumentError, "The board doesn't contain that position" unless valid
     valid
   end
   
@@ -61,5 +68,7 @@ class Board
     end
   end
   
-
+  def is_occupied?(pos)
+    self[pos] != @sentinel
+  end
 end
